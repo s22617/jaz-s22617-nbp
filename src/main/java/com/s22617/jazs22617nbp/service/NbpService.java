@@ -1,7 +1,7 @@
 package com.s22617.jazs22617nbp.service;
 
 import com.s22617.jazs22617nbp.model.CenaZlota;
-import com.s22617.jazs22617nbp.model.FetchedNbpResponse;
+import com.s22617.jazs22617nbp.model.NbpRequest;
 import com.s22617.jazs22617nbp.repository.NbpRepository;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 
 @Service
 public class NbpService {
@@ -24,12 +27,13 @@ public class NbpService {
 
     private final static String url = "http://api.nbp.pl/api/cenyzlota/";
 
-    private Double getAverage(FetchedNbpResponse response) {
+    private Double getAverage(CenaZlota[] response) {
         double summedRates = 0d;
-        for (CenaZlota cenaZlota : response.getCenaZlotaList()) {
-            summedRates += cenaZlota.getPrice();
+        List<CenaZlota> cenaZlotaList = Arrays.asList(response);
+        for (CenaZlota cenaZlota : response) {
+            summedRates += cenaZlota.getCena();
         }
-        return summedRates / response.getCenaZlotaList().size();
+        return summedRates / response.length;
     }
 
     public Double getAverageExchangeRate(String startDate, String endDate) {
@@ -38,12 +42,11 @@ public class NbpService {
 
         String finalUrl = url + startDate.toString() + "/" + endDate.toString();
 
-//        ResponseEntity<FetchedNbpResponse> response = restTemplate.exchange(finalUrl, HttpMethod.GET, null, FetchedNbpResponse.class);
-//        FetchedNbpResponse nbpResponse = response.getBody();
-
+        ResponseEntity<CenaZlota[]> response = restTemplate.exchange(finalUrl, HttpMethod.GET, null, CenaZlota[].class);
+        CenaZlota[] nbpResponse = response.getBody();
         double averageExchangeRate = getAverage(nbpResponse);
-        System.out.println(averageExchangeRate);
+        nbpRepository.save(new NbpRequest(null, "ZLOTY", Date.valueOf(startDate), Date.valueOf(endDate), averageExchangeRate, LocalDateTime.now()));
 
-        return null;
+        return averageExchangeRate;
     }
 }

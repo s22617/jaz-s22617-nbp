@@ -1,7 +1,6 @@
 package com.s22617.jazs22617nbp.model;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class FetchedNbpResponse {
     ArrayList<CenaZlota> cenaZlotaList;

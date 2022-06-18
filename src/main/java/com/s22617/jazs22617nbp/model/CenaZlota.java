@@ -1,32 +1,30 @@
 package com.s22617.jazs22617nbp.model;
 
-import java.sql.Date;
-
 public class CenaZlota {
-    String date;
-    Double price;
+    String data;
+    Double cena;
 
     public CenaZlota() {
     }
 
-    public CenaZlota(String date, Double price) {
-        this.date = date;
-        this.price = price;
+    public CenaZlota(String data, Double cena) {
+        this.data = data;
+        this.cena = cena;
     }
 
-    public String getDate() {
-        return date;
+    public String getData() {
+        return data;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setData(String data) {
+        this.data = data;
     }
 
-    public Double getPrice() {
-        return price;
+    public Double getCena() {
+        return cena;
     }
 
-    public void setPrice(Double price) {
-        this.price = price;
+    public void setCena(Double cena) {
+        this.cena = cena;
     }
 }
